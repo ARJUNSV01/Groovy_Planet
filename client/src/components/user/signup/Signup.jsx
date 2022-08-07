@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState,useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,14 +14,28 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios'
-import { serverURL } from '../../serverURL';
+import { serverURL } from '../../../serverURL';
 import swal from 'sweetalert'
+import { validPassword,validEmail } from '../../../regexAuth/RegexAuth';
+import { useDispatch,useSelector } from 'react-redux';
+import { signUpUser } from '../../../features/auth/authSlice';
+
 
 const theme = createTheme();
 
 
  function Signup(props) {
+   const dispatch = useDispatch()
+
+   const { userName, isLoading, signUpError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  )
+ 
+  console.log(userName,isLoading);
+
+   const [signupError,setSignUpError] = useState()
     const handleSubmit =  (event) => {
+      // setSignUpError("")
         event.preventDefault();
         const data = new FormData(event.currentTarget);
        
@@ -40,17 +55,20 @@ const theme = createTheme();
             phonenumber
         }
  console.log(formData);
-        
-   axios.post(`${serverURL}/auth/signup`,formData).then((response)=>{
-       console.log('ok');
-    console.log(response.data);
-    swal("h")
-       props.closeModal()
 
-   }).catch((err)=>{
-       console.log('errrrrr',err)
-       console.log(err.response.data.message);
-   })
+ dispatch(signUpUser (formData))
+        
+  //  axios.post(`${serverURL}/auth/signup`,formData).then((response)=>{
+  //      console.log('ok');
+  //   console.log(response.data);
+  //   swal("h")
+  //      props.closeModal()
+
+  //  }).catch((err)=>{
+  //      console.log('errrrrr',err)
+  //      console.log(err.response.data.message);
+  //      setSignUpError("User already exists")
+  //  })
       };
     const handleAction = ()=>{
         props.changeAction('signup')
@@ -111,6 +129,28 @@ const theme = createTheme();
               <TextField
                 required
                 fullWidth
+                name="phonenumber"
+                label="Phone number"
+                type="number"
+                id="phonenumber"
+                // autoComplete="new-password"
+              />
+            </Grid> 
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="new-password"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
                 name="password"
                 label="Password"
                 type="password"
@@ -119,17 +159,8 @@ const theme = createTheme();
               />
             </Grid>
             
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                name="phonenumber"
-                label="Phone number"
-                type="number"
-                id="phonenumber"
-                // autoComplete="new-password"
-              />
-            </Grid> 
+             <p className='text-danger mt-3 fs-6 mx-auto'>{signUpError?'User already exists':''}</p>
+            
             <Grid item xs={12}>
               <FormControlLabel
                 control={<Checkbox value="allowExtraEmails" color="primary" />}

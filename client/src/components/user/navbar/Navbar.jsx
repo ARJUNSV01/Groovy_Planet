@@ -16,13 +16,18 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { Drawer } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 import AuthModal from '../authModal/AuthModal';
-
+import { useSelector,useDispatch } from 'react-redux';
+import { reset } from '../../../features/auth/authSlice';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Navbar = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const { user,isLoggedIn  } = useSelector(
+    (state) => state.auth
+  )
   const [openModal,setOpenModal] = useState(false)
 
   const [isDrawerOpen,setIsDrawerOpen] = React.useState(false)
@@ -193,12 +198,21 @@ const Navbar = () => {
               <MenuItem key="Profile" onClick={()=>{handleCloseUserMenu()}}>
                   <Typography textAlign="center">Profile</Typography>
                 </MenuItem>
-                <MenuItem key="Profile" onClick={()=>{
+                {isLoggedIn ? <MenuItem key="Logout" onClick={()=>{
+                 
+                 handleCloseUserMenu()
+                 dispatch(reset())
+                }}>
+                 
+                  <Typography textAlign="center">Logout</Typography>
+                </MenuItem> :  <MenuItem key="Login" onClick={()=>{
                  setOpenModal(true)
                  handleCloseUserMenu()
                 }}>
+                 
                   <Typography textAlign="center">Login</Typography>
-                </MenuItem>
+                </MenuItem> }
+               
                 {/* <MenuItem key="Profile" onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">Login</Typography>
                 </MenuItem> */}

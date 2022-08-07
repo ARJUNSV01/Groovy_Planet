@@ -14,19 +14,27 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useForm} from "react-hook-form";
 import axios from 'axios';
-import { serverURL } from '../../serverURL';
+import { serverURL } from '../../../serverURL';
+import { useDispatch,useSelector } from 'react-redux';
+import { loginUser } from '../../../features/auth/authSlice';
+
 
 const theme = createTheme();
 
 
 function Login(props) {
+  const dispatch = useDispatch()
+ 
     const{register,handleSubmit} = useForm()
     const onSubmit = (data) => {
-        axios.post(`${serverURL}/auth/login`,data).then((response)=>{
-            console.log(response.data,'data');
-        }).catch((err)=>{
-          console.log(err.response.data.message,'err');
-        })
+        // axios.post(`${serverURL}/auth/login`,data).then((response)=>{
+        //     console.log(response.data,'data');
+        // }).catch((err)=>{
+        //   console.log(err.response.data.message,'err');
+        // })
+
+        dispatch(loginUser(data))
+        
       };
       const handleAction = ()=>{
           props.changeAction('login')
@@ -96,6 +104,9 @@ function Login(props) {
               </Grid>
             {/* </Grid> */}
             {/* <Grid item xs={6}> */}
+            <div>
+            <p className='text-danger mt-3 fs-6 mx-auto'>nvnvnbv</p>
+            </div>
             <Grid>
               <Typography sx={{display:'block', mt:3}}  align='center' variant="h7">
                 {"Don't have an account?"}<Link onClick={handleAction} variant='h7' color="primary" style={{cursor:'pointer'}} underline='none'> SignUp</Link>

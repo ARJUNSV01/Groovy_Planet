@@ -13,10 +13,11 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useForm} from "react-hook-form";
-import axios from 'axios';
-import { serverURL } from '../../../serverURL';
+
 import { useDispatch,useSelector } from 'react-redux';
 import { loginUser } from '../../../features/auth/authSlice';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const theme = createTheme();
@@ -24,17 +25,18 @@ const theme = createTheme();
 
 function Login(props) {
   const dispatch = useDispatch()
+  const{message,loginError} = useSelector ((state)=> state.auth)
  
     const{register,handleSubmit} = useForm()
-    const onSubmit = (data) => {
+    const onSubmit =  (data) => {
         // axios.post(`${serverURL}/auth/login`,data).then((response)=>{
         //     console.log(response.data,'data');
         // }).catch((err)=>{
         //   console.log(err.response.data.message,'err');
         // })
 
-        dispatch(loginUser(data))
-        
+       dispatch(loginUser(data))
+
       };
       const handleAction = ()=>{
           props.changeAction('login')
@@ -121,6 +123,7 @@ function Login(props) {
     </Container>
   </ThemeProvider>
   </Grid>
+  <ToastContainer/>
   </div>
   )
 }

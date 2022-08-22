@@ -23,6 +23,9 @@ const UserSchema = new mongoose.Schema({
         required:true,
         unique:true
     },
+    isBlocked:{
+        type:Boolean
+    }
 
     
 },{timestamps:true})

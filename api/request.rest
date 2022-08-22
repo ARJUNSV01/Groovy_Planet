@@ -1,0 +1,19 @@
+POST http://localhost:8800/auth/adminLogin
+Content-Type: application/json
+
+{
+    "email":"admin@gmail.com",
+    "password":"arjun"
+}
+
+###
+POST http://localhost:8800/auth/token
+Content-Type: application/json
+
+{
+    "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZWZhNDA0ZjE4YzcyNGQ4NjMzMTcyNCIsIm5hbWUiOiJhZG1pbiIsImlhdCI6MTY1OTkzMjUwNX0.X5YdmHq_5nasNA07kGxqsuuoPvXfDuGlW4DB49MrDm8"
+}
+
+###
+GET http://localhost:8800/auth/getPosts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJpYXQiOjE2NTk5MzI1MjAsImV4cCI6MTY1OTkzMjU0MH0.ndIitNkmKiDErUPJ1ZQh5b9PpZbiZEzG696DQ_U1G6E

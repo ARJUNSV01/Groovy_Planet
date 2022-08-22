@@ -18,11 +18,12 @@ import { useNavigate } from "react-router-dom";
 import AuthModal from '../authModal/AuthModal';
 import { useSelector,useDispatch } from 'react-redux';
 import { reset } from '../../../features/auth/authSlice';
+import { setShow } from '../../../features/user/ModalSlice';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-const Navbar = () => {
+const Navbar = ({color,position}) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { user,isLoggedIn  } = useSelector(
@@ -55,11 +56,12 @@ const Navbar = () => {
 
   return (
     <>
-    <AppBar  position="static">
+    <AppBar style={{backgroundColor:color,boxShadow:'none'}}  position={position?position:'sticky'}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
+          {/* <img height='80em' src='../../../../groovyicon.png'/> */}
+         <Typography
             variant="h6"
             noWrap
             component="a"
@@ -75,7 +77,7 @@ const Navbar = () => {
             }}
           >
             GROOVY_PLANET 
-          </Typography>
+          </Typography> 
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
 
@@ -93,6 +95,7 @@ const Navbar = () => {
             >
               <MenuIcon />
             </IconButton>
+            
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}

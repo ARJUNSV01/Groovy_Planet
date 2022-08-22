@@ -1,5 +1,6 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { serverURL } from "../../serverURL";
 
 
@@ -11,7 +12,9 @@ const initialState = {
     isSuccess:false,
     isLoading:false,
     message:'',
-    isLoggedIn:false
+    isLoggedIn:false,
+    showModal:false,
+    
 }
 
 export const signUpUser = createAsyncThunk(
@@ -20,9 +23,11 @@ export const signUpUser = createAsyncThunk(
         try {
          const response = await axios.post(`${serverURL}/auth/signup`,userData) 
          const data = response.data
+         toast.success('Signup Successful')
          return { ...data }
         } catch (error) {
                 console.log(error);
+                toast.error('Email already exists')
                 return thunkAPI.rejectWithValue(error.response.data)
         }
     }
@@ -34,16 +39,19 @@ export const loginUser = createAsyncThunk(
          const response = await axios.post(`${serverURL}/auth/login`,userData) 
          const data = response.data
          console.log(data);
+         toast.success('Authentication Successful')
          return { ...data }
         } catch (error) {
                 console.log(error);
+                toast.error(error.response.data.message)
                 return thunkAPI.rejectWithValue(error.response.data)
         }
     }
 )
 
+
 export const authSlice = createSlice({
-    name:'auth',
+    name:'auths',
     initialState,
     reducers:{
         reset : (state)=>{
@@ -55,6 +63,9 @@ export const authSlice = createSlice({
             state.isLoggedIn = false
             state.message = ''
           
+        },
+        setShoow: (state)=>{
+            state.show=!state.show
         }
     },
     extraReducers : {
@@ -81,6 +92,7 @@ export const authSlice = createSlice({
             state.isLoading = false
             state.isError = false
             state.isSuccess = true
+            state.loginError = false
             state.message = 'User logged in  '
             state.isLoggedIn = true
         },
@@ -93,10 +105,11 @@ export const authSlice = createSlice({
             state.isLoading = false
             state.isError = true
             state.isSuccess = false
+            state.loginError = true
             state.message = action.payload.message
             state.isLoggedIn = false
         }      
     }
 })
-export const {reset} = authSlice.actions
+export const {reset,setShoow} = authSlice.actions
 export default authSlice.reducer    

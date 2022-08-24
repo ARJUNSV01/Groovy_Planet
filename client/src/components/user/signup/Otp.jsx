@@ -21,18 +21,18 @@ import { serverURL } from '../../../serverURL';
 const useStyles = makeStyles((theme) => ({
   grid: {
     backgroundColor: 'grey',
-    height: '50vh',
+    height: '50%',
     textAlign: 'center',
   },
   avatar: {
-    margin: theme.spacing(1),
+    // margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(1),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -51,11 +51,11 @@ export default function Otp(props) {
       console.log(props.MobileNumber);
       const res =await axios.post(`${serverURL}/auth/verifyOtp`, { MobileNumber:props.MobileNumber,otp },{withCredentials:true});
       console.log(res);
-      if(res.request.status == 200){
+    
         setOtpErr(null)
         props.onChange(otp);
         props.closeOtpModal()
-      }
+    
      }catch(err){
       setOtpErr("Invalid OTP")
       console.log(err);
@@ -65,7 +65,7 @@ export default function Otp(props) {
   // let hasFourDigit =/^\d{4}$/.test(otp)
 
   return (
-    <Container component='main' maxWidth='sm'>
+    <Container component='mai' maxWidth='xs'>
       <CssBaseline />
       <div className={classes.paper}>
         <Grid

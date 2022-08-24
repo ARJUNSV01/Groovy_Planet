@@ -6,6 +6,13 @@ import adminRoute from "./routes/admin.js"
 import userRoute from "./routes/users.js"
 import cors from 'cors'
 import cookieParser from "cookie-parser"
+import path from 'path'
+import { fileURLToPath } from 'url';
+import bodyParser from "body-parser"
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 const app = express()
 dotenv.config()
@@ -27,7 +34,11 @@ mongoose.connection.on("connected",()=>{
 //middlewares
 
 app.use(cors({origin:true,credentials:true}));
+// app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser())
+app.use(express.static(path.join(__dirname, 'public')));
+// app.use(bodyParser.urlencoded({ extended: true }))
+// app.use(bodyParser.json())
 app.use(express.json());
 app.use("/auth",authRoute)
 app.use("/admin",adminRoute)

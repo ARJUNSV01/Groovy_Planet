@@ -16,6 +16,7 @@ dotenv.config();
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 import twilio from 'twilio';
+import HotelOnwer from "../models/HotelOnwer.js";
 const client = twilio(accountSid,authToken)
 
 
@@ -162,50 +163,58 @@ export const test = asyncHandler(async(req,res)=>{
 // import { createError } from '../../../createError.js';
 // const client = twilio(accountSid, authToken);
 
-export const sendOtp = asyncHandler(async (req, res, next) => {
-  console.log('---------------------here-----------------');
+export const sendOtp = asyncHandler(async (req, res) => {
   console.log(req.body);
   console.log(accountSid, authToken);
   const Mobilenumber = req.body.phoneNumber;
 
-  // const verification = await client.verify.v2
-  //   .services(process.env.TWILIO_SERVICE_ID)
-  //   .verifications.create({ to: `+91${Mobilenumber}`, channel: 'sms' });
+  const verification = await client.verify.v2
+    .services(process.env.TWILIO_SERVICE_ID)
+    .verifications.create({ to: `+91${Mobilenumber}`, channel: 'sms' });
 
-  // console.log(verification);
-  // return res.status(200).json({ message: verification });
+  console.log(verification);
+  return res.status(200).json({ message: verification });
 
-  console.log(req.body);
-  return res.status(200).json({ message: 'verification' });
+  // console.log(req.body);
+  // return res.status(200).json({ message: 'verification' });
 });
 
 export const Verifyotp = asyncHandler(async (req, res, next) => {
+  console.log(req.body,'ki');
   const { MobileNumber, otp } = req.body;
   console.log('verify otp');
   console.log(MobileNumber,otp);
-  // await client.verify.v2
-  //   .services(process.env.TWILIO_SERVICE_ID)
-  //   .verificationChecks.create({ to: `+91${MobileNumber}`, code: otp })
-  //   .then((verification_check) => {
-  //     // resolve(verification_check.status))
-  //     console.log(verification_check.status);
-  //     if (verification_check.status == 'approved') {
-  //       return res.status(200).json({ message: 'approved' });
-  //     } else {
-  //       next(createError(400, 'Invalid OTP'));
-  //     }
-  //   })
-  //   .catch((err) => {
-  //     next(createError(400, 'Invalid OTP'));
-  //     console.log(err);
-  //     // reject(err)
-  //   });
+  await client.verify.v2
+    .services(process.env.TWILIO_SERVICE_ID)
+    .verificationChecks.create({ to: `+91${MobileNumber}`, code: otp })
+    .then((verification_check) => {
+      console.log(verification_check.status);
+      if (verification_check.status == 'approved') {
+        return res.status(200).json({ message: 'approved' });
+      } else {
+        next(createError(400, 'Invalid OTP'));
+      }
+    })
+    .catch((err) => {
+      next(createError(400, 'Invalid OTP'));
+      console.log(err);
+      // reject(err)
+    });
 
 
-    return res.status(200).json({ message: 'approved' });
+    // return res.status(200).json({ message: 'approved' });
 
 });
 
 export const hotelOwnerSignup = asyncHandler(async(req,res)=>{
   const {firstname,lastname,email,password,phonenumber} = req.body
+  const user = await HotelOnwer.create({
+    firstname:firstname,
+    lastname: lastname,
+    email:email,
+    password: await bcrypt.hash(password, 10),
+    phonenumber:phonenumber,
+  });
+  res.status(200).send("user has been created");
+  
 })

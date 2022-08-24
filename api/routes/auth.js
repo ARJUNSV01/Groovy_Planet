@@ -1,5 +1,6 @@
 import express from "express"
 import { adminLogin, userLogin, userSignUp,token,test, sendOtp, Verifyotp, adminLogout, hotelOwnerSignup } from "../controllers/auth.js"
+import { upload } from "../middlewares/fileUploadMulter.js"
 import { authenticateToken } from "../middlewares/verifyToken.js"
 const router = express.Router()
 
